@@ -13,13 +13,12 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
-if os.environ.get('DJANGO_ENV') == 'development':
-    try:
-        from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv
 
-        load_dotenv()
-    except ModuleNotFoundError:
-        print("dotenv not installed. Proceeding without loading .env file.")
+    load_dotenv()
+except ModuleNotFoundError:
+    print("dotenv not installed. Proceeding without loading .env file.")
 
 # Project Version
 VERSION = '0.1.0'
@@ -49,6 +48,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Third Party Apps
+    'django_userforeignkey',
+    # Own apps
+    'apps.users',
 ]
 
 MIDDLEWARE = [
@@ -133,3 +136,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Custom User
+AUTH_USER_MODEL = 'users.CustomUser'
+
+# Media roots
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
