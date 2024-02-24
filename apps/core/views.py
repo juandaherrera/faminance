@@ -13,4 +13,5 @@ class Index(TemplateView):
         context['breadcrumbs'] = [
             {'name': 'Home', 'url': '/'},
         ]
+        context['style'] = {'header': {'dash': True}}
         return context
