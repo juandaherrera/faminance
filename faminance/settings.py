@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     # Own apps
     'apps.users',
     'apps.core',
+    'apps.finance',
 ]
 
 if os.environ.get('DJANGO_ENV') == 'development':

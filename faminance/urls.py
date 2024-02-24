@@ -23,6 +23,7 @@ from django.urls import include, path, re_path
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path('', include('apps.core.urls')),
+    re_path('finance/', include('apps.finance.urls')),
 ]
 
 
