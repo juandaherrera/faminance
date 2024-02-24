@@ -3,6 +3,8 @@
 [![Python](https://img.shields.io/badge/Python-3.11+-yellow?style=for-the-badge&logo=python&logoColor=white&labelColor=101010)](https://python.org)
 [![Django](https://img.shields.io/badge/Django-5.0.2-5646ED?style=for-the-badge&logo=django&logoColor=white&labelColor=101010)](https://reflex.dev)
 
+[![Django CI](https://github.com/juandaherrera/faminance/actions/workflows/django.yml/badge.svg)](https://github.com/juandaherrera/faminance/actions/workflows/django.yml)
+
 ## Descripción
 
 Faminance es una herramienta diseñada para gestionar las finanzas de toda una familia de manera eficiente y sencilla. Este proyecto busca facilitar el seguimiento de ingresos, gastos, y ahorros familiares, promoviendo una mejor organización financiera.
