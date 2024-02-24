@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Third Party Apps
     'django_userforeignkey',
+    'widget_tweaks',
     # Own apps
     'apps.users',
     'apps.core',

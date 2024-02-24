@@ -1,0 +1,11 @@
+{% load widget_tweaks %}
+{% csrf_token %}
+<div class="container-fluid">
+    <input name="action" type="hidden", value="add"> </input>
+    {% for field in form.visible_fields %}
+        <div class="form-group mb-3"> 
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field|add_class:'form-control'|attr:'autocomplete:off' }}
+        </div>
+    {% endfor %}
+</div>
