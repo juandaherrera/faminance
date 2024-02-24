@@ -52,7 +52,12 @@ INSTALLED_APPS = [
     'django_userforeignkey',
     # Own apps
     'apps.users',
+    'apps.core',
 ]
+
+if os.environ.get('DJANGO_ENV') == 'development':
+    INSTALLED_APPS += ['django_extensions']
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -69,7 +74,7 @@ ROOT_URLCONF = 'faminance.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
