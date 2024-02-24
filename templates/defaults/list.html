@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block header %}{% endblock header %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                {% comment %} <h5 class="card-title">Special title treatment</h5> {% endcomment %}
+                <table class="datatable table">
+                    <thead>
+                        {% block table_header %}
+                        {% endblock table_header %}
+                    </thead>
+                    <tbody>
+                        {% block table_body %}
+                        {% endblock table_body %}
+                    </tbody>
+                </table>
+                {% comment %} <a href="#" class="btn btn-primary">Go somewhere</a> {% endcomment %}
+            </div>
+        </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    // Activar DataTables en todas las tablas con la clase .datatable
+    $(document).ready(function() {
+        $('.datatable').DataTable();
+    });
+
+    $('.datatable').DataTable({
+        responsive: true,
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json'
+        }
+    });    
+</script>
+{% endblock scripts %}

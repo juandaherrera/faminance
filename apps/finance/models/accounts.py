@@ -100,6 +100,7 @@ class Account(BaseModel):
         on_delete=models.CASCADE,
         verbose_name='Grupo Familiar',
         null=True,
+        blank=True,
     )
 
     class Meta:

@@ -1,0 +1,23 @@
+{% extends "defaults/list.html" %}
+
+{% block table_header %}
+    <tr>
+        <th>Nombre</th>
+        <th>Tipo de Cuenta</th>
+        <th>Saldo</th>
+        <th>Usuario</th>
+    </tr>
+{% endblock table_header %}
+
+
+{% block table_body %}
+    {% for account in object_list %}
+        <tr>
+            <td> {{ account.name }} </td>
+            <td><i class="{{ account.type.icon }}"></i> {{ account.type }}</td>
+            <td class="format-number">{{ account.balance }}</td>
+            <td>{{ account.user.first_name }}</td>
+        </tr>
+    {% endfor %}
+{% endblock table_body %}
+
