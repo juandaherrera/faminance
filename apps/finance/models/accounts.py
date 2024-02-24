@@ -25,8 +25,8 @@ class Currency(BaseModel):
     )
 
     class Meta:
-        verbose_name = 'Currency'
-        verbose_name_plural = "Currencies"
+        verbose_name = 'Moneda'
+        verbose_name_plural = "Monedas"
         ordering = ['code']
 
     def __str__(self):
@@ -57,8 +57,8 @@ class AccountType(BaseModel):
     )
 
     class Meta:
-        verbose_name = 'Account Type'
-        verbose_name_plural = "Account Types"
+        verbose_name = 'Tipo de Cuenta'
+        verbose_name_plural = "Tipos de Cuenta"
         ordering = ['name']
 
     def save(self, *args, **kwargs):
@@ -103,8 +103,8 @@ class Account(BaseModel):
     )
 
     class Meta:
-        verbose_name = 'Account'
-        verbose_name_plural = "Accounts"
+        verbose_name = 'Cuenta'
+        verbose_name_plural = "Cuentas"
         ordering = ['family_group', 'user', 'type', 'name']
 
         constraints = [

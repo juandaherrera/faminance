@@ -36,7 +36,7 @@ class TransactionCategory(BaseModel):
     class Meta:
         verbose_name = 'Categoría de Transacción'
         verbose_name_plural = "Categorías de Transacción"
-        ordering = ['family_group', 'user', 'parent.name', 'name']
+        ordering = ['family_group', 'user', 'name']
 
         constraints = [
             models.UniqueConstraint(
@@ -74,9 +74,9 @@ class Transaction(BaseModel):
     )
 
     class Meta:
-        verbose_name = 'Transaction'
-        verbose_name_plural = "Transactions"
+        verbose_name = 'Transacción'
+        verbose_name_plural = "Transacciones"
         ordering = ['category', '-date', 'account']
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'({self.category}) | {self.date} | {self.amount}'

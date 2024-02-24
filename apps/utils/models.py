@@ -35,3 +35,12 @@ class BaseModel(models.Model):
 
     class Meta:
         abstract = True
+
+    # Tener cuidado porque esto no aplica para borrados en lote
+    def delete(self, *args, **kwargs):
+        self._deleted = True
+        self.save()
+
+    def restore(self, *args, **kwargs):
+        self._deleted = False
+        self.save()
