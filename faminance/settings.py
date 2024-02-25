@@ -13,15 +13,12 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
-try:
-    from dotenv import load_dotenv
+from dotenv import load_dotenv
 
-    load_dotenv()
-except ModuleNotFoundError:
-    print("dotenv not installed. Proceeding without loading .env file.")
+load_dotenv()
 
 # Project Version
-VERSION = '0.1.3'
+VERSION = '0.1.4'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -57,10 +54,6 @@ INSTALLED_APPS = [
     'apps.core',
     'apps.finance',
 ]
-
-if os.environ.get('DJANGO_ENV') == 'development':
-    INSTALLED_APPS += ['django_extensions']
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
