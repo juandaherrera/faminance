@@ -38,6 +38,20 @@ class TransactionModelTests(TestCase):
             user=self.user, category=self.category
         )
 
+    def test_account_with_initial_balance_creates_transaction(self):
+        account = Account.objects.create(
+            name="Test Account Initial Balance",
+            balance=1500,
+            type=self.account_type,
+            currency=self.currency,
+            user=self.user,
+        )
+        transaction = Transaction.objects.get(account=account)
+
+        self.assertEqual(account.balance, 1500)
+        self.assertEqual(account.balance, transaction.amount)
+        self.assertGreaterEqual(transaction.created_at, account.created_at)
+
     def test_add_new_transaction_updates_account_balance(self):
         amount = 50.00
         Transaction.objects.create(

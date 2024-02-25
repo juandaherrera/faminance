@@ -44,7 +44,7 @@
 <div class="modal-dialog">
     <div class="modal-content">
     <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Nuevo Modelo</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Creación de {{ info.model.name }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
     </div>
     <form method="post" action="{{ info.others.create_url }}">
@@ -77,31 +77,35 @@
         }
     }); 
     
-    $(document).ready(function() {
-        // Escucha el evento 'click' en los botones que deberían cargar el modal con el formulario
-        $('.btn-load-modal').on('click', function () {
-            var button = $(this); // El botón que fue clickeado
-            var loadUrl = button.data('load-url'); // La URL desde donde cargar el formulario
-            var targetModalSelector = button.data('bs-target'); // El selector del modal a abrir
-            var targetModal = $(targetModalSelector);
-            
-            // Realiza la solicitud AJAX para obtener el formulario
-            $.ajax({
-                url: loadUrl,
-                type: 'GET',
-                dataType: 'html',
-                success: function(data) {
-                    // Inserta el formulario en el cuerpo del modal
-                    targetModal.find('.modal-body').html(data);
-                    // Muestra el modal
-                    targetModal.modal('show');
-                },
-                error: function(xhr, status, error) {
-                    // Maneja posibles errores aquí
-                    console.error("Error al cargar el formulario: ", error);
-                }
+    {% if info.others.create_url %}
+    
+        $(document).ready(function() {
+            // Escucha el evento 'click' en los botones que deberían cargar el modal con el formulario
+            $('.btn-load-modal').on('click', function () {
+                var button = $(this); // El botón que fue clickeado
+                var loadUrl = button.data('load-url'); // La URL desde donde cargar el formulario
+                var targetModalSelector = button.data('bs-target'); // El selector del modal a abrir
+                var targetModal = $(targetModalSelector);
+                
+                // Realiza la solicitud AJAX para obtener el formulario
+                $.ajax({
+                    url: loadUrl,
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function(data) {
+                        // Inserta el formulario en el cuerpo del modal
+                        targetModal.find('.modal-body').html(data);
+                        // Muestra el modal
+                        targetModal.modal('show');
+                    },
+                    error: function(xhr, status, error) {
+                        // Maneja posibles errores aquí
+                        console.error("Error al cargar el formulario: ", error);
+                    }
+                });
             });
         });
-    });
+
+    {% endif %}
 </script>
 {% endblock scripts %}

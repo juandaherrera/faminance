@@ -26,6 +26,7 @@ class AccountTypeListView(ListView):
         return context
 
 
+# TO_DO crear modelo pydantic de los campos pasados como contexto
 class AccountListView(ListView):
     model = Account
     template_name = 'account_list.html'
@@ -35,6 +36,7 @@ class AccountListView(ListView):
     )
     info = {
         'header': {'title': 'Cuentas'},
+        'model': {'name': Account._meta.verbose_name},
         'others': {
             'create_button': 'Agregar Cuenta',
             'create_url': reverse_lazy('finance:account-create'),

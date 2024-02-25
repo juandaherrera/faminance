@@ -1,4 +1,5 @@
 {% extends "defaults/list.html" %}
+{% load humanize %}
 
 {% block table_header %}
     <th>Nombre</th>
@@ -14,12 +15,13 @@
         <tr>
             <td> {{ object.name }} </td>
             <td><i class="{{ object.type.icon }}"></i> {{ object.type }}</td>
-            <td class="format-number">{{ object.balance }}</td>
+            <td>{{ object.balance_formatted|intcomma }}</td>
             <td>{{ object.user.first_name }}</td>
             <td>
                 {% include "defaults/action_buttons.html" %}
             </td>
         </tr>
+        
     {% endfor %}
 {% endblock table_body %}
 

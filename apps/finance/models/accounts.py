@@ -1,5 +1,6 @@
 from django.db import models
 
+import apps.utils.functions as utils
 from apps.users.models import CustomUser, FamilyGroup
 from apps.utils.models import BaseModel
 
@@ -90,6 +91,10 @@ class Account(BaseModel):
         null=True,
         blank=True,
     )
+
+    @property
+    def balance_formatted(self):
+        return utils.float_formatter(self.balance)
 
     class Meta:
         verbose_name = 'Cuenta'
