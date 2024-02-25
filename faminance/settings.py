@@ -21,7 +21,7 @@ except ModuleNotFoundError:
     print("dotenv not installed. Proceeding without loading .env file.")
 
 # Project Version
-VERSION = '0.1.3'
+VERSION = '0.1.4'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
