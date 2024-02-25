@@ -10,9 +10,7 @@ class BaseModel(models.Model):
         models: django model class
     """
 
-    _deleted = models.BooleanField(
-        verbose_name="Borrado", default=False, editable=False
-    )
+    _deleted = models.BooleanField(verbose_name="Borrado", default=False, editable=False)
     created_at = models.DateTimeField(
         verbose_name="Fecha de creación", auto_now_add=True, editable=False
     )

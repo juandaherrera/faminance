@@ -6,22 +6,61 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
+            <div class="card-header">
+                <div class="row d-flex justify-content-end align-items-center">
+                    <div class="col d-flex justify-content-start align-items-center">
+                        <h4 class="card-title">Listado de {{ info.header.title }}</h4> 
+                    </div>
+                    <div class="col-3 d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary btn-load-modal" data-bs-toggle="modal" data-bs-target="#modalCreateInstance", 
+                            data-load-url="{{ info.others.create_url }}">
+                            <i class="bi bi-plus"></i> {{ info.others.create_button }}
+                        </button>
+                    </div>
+                </div>
+            </div>
             <div class="card-body">
                 {% comment %} <h5 class="card-title">Special title treatment</h5> {% endcomment %}
+                
                 <table class="datatable table">
                     <thead>
-                        {% block table_header %}
-                        {% endblock table_header %}
+                        <tr>
+                            {% block table_header %}
+                            {% endblock table_header %}
+                        </tr>
                     </thead>
                     <tbody>
                         {% block table_body %}
                         {% endblock table_body %}
                     </tbody>
                 </table>
-                {% comment %} <a href="#" class="btn btn-primary">Go somewhere</a> {% endcomment %}
             </div>
         </div>
 </div>
+
+
+<!-- Estructura del Modal -->
+<div class="modal fade" id="modalCreateInstance" tabindex="-1" aria-labelledby="modalCreateInstance" aria-hidden="true">
+<div class="modal-dialog">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Creación de {{ info.model.name }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+    </div>
+    <form method="post" action="{{ info.others.create_url }}">
+        <div class="modal-body">
+            
+            <!-- Aquí irá el formulario -->
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </div>
+        </div>
+    </form>
+</div>
+</div>
+
 {% endblock content %}
 
 {% block scripts %}
@@ -36,6 +75,37 @@
         language: {
             url: 'https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json'
         }
-    });    
+    }); 
+    
+    {% if info.others.create_url %}
+    
+        $(document).ready(function() {
+            // Escucha el evento 'click' en los botones que deberían cargar el modal con el formulario
+            $('.btn-load-modal').on('click', function () {
+                var button = $(this); // El botón que fue clickeado
+                var loadUrl = button.data('load-url'); // La URL desde donde cargar el formulario
+                var targetModalSelector = button.data('bs-target'); // El selector del modal a abrir
+                var targetModal = $(targetModalSelector);
+                
+                // Realiza la solicitud AJAX para obtener el formulario
+                $.ajax({
+                    url: loadUrl,
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function(data) {
+                        // Inserta el formulario en el cuerpo del modal
+                        targetModal.find('.modal-body').html(data);
+                        // Muestra el modal
+                        targetModal.modal('show');
+                    },
+                    error: function(xhr, status, error) {
+                        // Maneja posibles errores aquí
+                        console.error("Error al cargar el formulario: ", error);
+                    }
+                });
+            });
+        });
+
+    {% endif %}
 </script>
 {% endblock scripts %}

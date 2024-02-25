@@ -1,23 +1,32 @@
 {% extends "defaults/list.html" %}
+{% load humanize %}
 
 {% block table_header %}
-    <tr>
-        <th>Nombre</th>
-        <th>Tipo de Cuenta</th>
-        <th>Saldo</th>
-        <th>Usuario</th>
-    </tr>
+    <th>Nombre</th>
+    <th>Tipo de Cuenta</th>
+    <th>Saldo</th>
+    <th>Usuario</th>
+    <th>Última Transacción</th>
+    <th>Acciones</th>
 {% endblock table_header %}
 
 
 {% block table_body %}
-    {% for account in object_list %}
+    {% for object in object_list %}
         <tr>
-            <td> {{ account.name }} </td>
-            <td><i class="{{ account.type.icon }}"></i> {{ account.type }}</td>
-            <td class="format-number">{{ account.balance }}</td>
-            <td>{{ account.user.first_name }}</td>
+            <td> {{ object.name }} </td>
+            <td><i class="{{ object.type.icon }}"></i> {{ object.type }}</td>
+            <td>{{ object.balance_formatted|intcomma }}</td>
+            <td>{{ object.user.first_name }}</td>
+            <td>
+                {% if object.last_transaction %}
+                {{ object.last_transaction.date|naturaltime }} | <a href="#"><i class="bi bi-box-arrow-up-right"></i></a>
+                {% endif %}
+            </td>
+            <td>
+                {% include "defaults/action_buttons.html" %}
+            </td>
         </tr>
+        
     {% endfor %}
 {% endblock table_body %}
-

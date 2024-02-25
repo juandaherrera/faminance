@@ -1,18 +1,22 @@
 from django.test import TestCase
 from django.utils import timezone
 
+from apps.users.models import CustomUser
+
 from .models import (
     Account,
     AccountType,
     Currency,
     Transaction,
     TransactionCategory,
+    UserTrasactionCategory,
 )
 
 
 class TransactionModelTests(TestCase):
 
     def setUp(self):
+        self.user = CustomUser.objects.create(username='Test User', password='TestPassUser123$')
         self.account_type = AccountType.objects.create(name='Test Account Type')
         self.currency = Currency.objects.create(name='Test Money', code='ZZZ')
         self.account = Account.objects.create(
@@ -20,19 +24,38 @@ class TransactionModelTests(TestCase):
             balance=100.00,
             type=self.account_type,
             currency=self.currency,
+            user=self.user,
         )
         self.second_account = Account.objects.create(
             name="Test Account 2",
             balance=50.00,
             type=self.account_type,
             currency=self.currency,
+            user=self.user,
         )
         self.category = TransactionCategory.objects.create(name="Test Category")
+        self.user_category = UserTrasactionCategory.objects.create(
+            user=self.user, category=self.category
+        )
+
+    def test_account_with_initial_balance_creates_transaction(self):
+        account = Account.objects.create(
+            name="Test Account Initial Balance",
+            balance=1500,
+            type=self.account_type,
+            currency=self.currency,
+            user=self.user,
+        )
+        transaction = Transaction.objects.get(account=account)
+
+        self.assertEqual(account.balance, 1500)
+        self.assertEqual(account.balance, transaction.amount)
+        self.assertGreaterEqual(transaction.created_at, account.created_at)
 
     def test_add_new_transaction_updates_account_balance(self):
         amount = 50.00
         Transaction.objects.create(
-            category=self.category,
+            category=self.user_category,
             account=self.account,
             amount=amount,
             date=timezone.now(),
@@ -45,7 +68,7 @@ class TransactionModelTests(TestCase):
 
     def test_edit_transaction_updates_account_balance(self):
         transaction = Transaction.objects.create(
-            category=self.category,
+            category=self.user_category,
             account=self.account,
             amount=50.00,
             date=timezone.now(),
@@ -61,7 +84,7 @@ class TransactionModelTests(TestCase):
 
     def test_delete_transaction_updates_account_balance(self):
         transaction = Transaction.objects.create(
-            category=self.category,
+            category=self.user_category,
             account=self.account,
             amount=50.00,
             date=timezone.now(),
@@ -76,7 +99,7 @@ class TransactionModelTests(TestCase):
 
     def test_edit_account_updates_accounts_balances(self):
         transaction = Transaction.objects.create(
-            category=self.category,
+            category=self.user_category,
             account=self.account,
             amount=50.00,
             date=timezone.now(),
@@ -92,3 +115,6 @@ class TransactionModelTests(TestCase):
         self.assertEqual(self.second_account.balance, 100.00)
 
     # TO_DO Qué pasa cuando se cambia la cuenta a otra que tiene Currency diferente?
+
+
+# class AccountModelTests(TestCase):
