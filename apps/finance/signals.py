@@ -3,6 +3,7 @@ from django.db.models.signals import post_migrate, post_save, pre_save
 from django.dispatch import receiver
 from django.utils import timezone
 
+import apps.utils.functions as utils
 from apps.users.models import CustomUser
 
 from .input_data import (
@@ -31,25 +32,13 @@ def create_defeault_instances(sender, **kwargs):
 
     if sender.name == 'apps.finance':
         # --------------- Default Currencies ---------------
-        for c in currency_instances:
-            obj, _ = Currency.objects.get_or_create(code=c, name=currency_instances[c])
+        utils.create_objects_from_list(currency_instances, Currency)
 
-        # --------------- Default Account Categories ---------------
-        for ac in account_type_instaces:
-            try:
-                AccountType.objects.get_or_create(
-                    name=ac,
-                    description=account_type_instaces[ac]['description'],
-                    icon=account_type_instaces[ac]['icon'],
-                )
-            except Exception as e:
-                print(e)
+        # ----------- Default Account Categories -----------
+        utils.create_objects_from_list(account_type_instaces, AccountType)
 
-        for category in all_transaction_categories:
-            try:
-                TransactionCategory.objects.get_or_create(**category)
-            except Exception as e:
-                print(e)
+        # --------- Default Transaction Categories ---------
+        utils.create_objects_from_list(all_transaction_categories, TransactionCategory)
 
 
 @receiver(pre_save, sender=Transaction)
