@@ -64,6 +64,9 @@ DJANGO_ENV=development
 
 # Clave secreta de Django, genera una usando 'django.core.management.utils.get_random_secret_key()'
 DJANGO_SECRET_KEY=...
+
+# Debug encendido / apagado
+DJANGO_DEBUG=True
 ```
 
 En el repositorio se incluye un [ejemplo](.env.example) de cómo debería verse este archivo.

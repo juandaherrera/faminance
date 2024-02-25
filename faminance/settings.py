@@ -13,12 +13,15 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
-from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv
 
-load_dotenv()
+    load_dotenv()
+except ModuleNotFoundError:
+    print("dotenv not installed. Proceeding without loading .env file.")
 
 # Project Version
-VERSION = '0.1.4'
+VERSION = '0.1.5'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,7 +34,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if os.environ.get('DJANGO_ENV') == 'development' else False
+DEBUG = bool(os.environ.get('DJANGO_DEBUG', False))
 
 ALLOWED_HOSTS = []
 
@@ -54,6 +57,9 @@ INSTALLED_APPS = [
     'apps.core',
     'apps.finance',
 ]
+
+if os.environ.get('DJANGO_ENV') == 'development':
+    INSTALLED_APPS += ['django_extensions']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
