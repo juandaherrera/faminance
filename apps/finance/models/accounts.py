@@ -10,9 +10,7 @@ class Currency(BaseModel):
     """
 
     name = models.CharField(max_length=80, verbose_name='Nombre', unique=True)
-    code = models.CharField(
-        max_length=3, verbose_name='Código ISO 4217', unique=True
-    )
+    code = models.CharField(max_length=3, verbose_name='Código ISO 4217', unique=True)
     trm = models.DecimalField(
         max_digits=10,
         verbose_name='TRM Value',
@@ -20,9 +18,7 @@ class Currency(BaseModel):
         null=True,
         blank=True,
     )
-    trm_updated_at = models.DateTimeField(
-        verbose_name='Last TRM Update', blank=True, null=True
-    )
+    trm_updated_at = models.DateTimeField(verbose_name='Last TRM Update', blank=True, null=True)
 
     class Meta:
         verbose_name = 'Moneda'
@@ -43,16 +39,14 @@ class AccountType(BaseModel):
     For example: savings account, credit cards, assets, liabilities.
     This model will only be accessible to the admin of the application. Users will not be able to create account categories.
 
-    The icons have to be FontAwesome classes
+    The icons have to be BootstrapIcon classes
     """
 
     name = models.CharField(max_length=80, verbose_name='Nombre', unique=True)
-    description = models.TextField(
-        verbose_name='Descripción', null=True, blank=True
-    )
+    description = models.TextField(verbose_name='Descripción', null=True, blank=True)
     icon = models.CharField(
         max_length=80,
-        verbose_name='Icono (Fontawesome)',
+        verbose_name='Icono (BootstrapIcon)',
         default='fa-solid fa-wallet',
     )
 
@@ -74,9 +68,7 @@ class Account(BaseModel):
     This model is the representation of a user account. For example: A savings account at bank x, a credit card at bank y, etc.
     """
 
-    type = models.ForeignKey(
-        AccountType, on_delete=models.CASCADE, verbose_name='Tipo de Cuenta'
-    )
+    type = models.ForeignKey(AccountType, on_delete=models.CASCADE, verbose_name='Tipo de Cuenta')
     currency = models.ForeignKey(
         Currency, on_delete=models.CASCADE, verbose_name='Moneda'
     )  # , default=1 <- COP debería ser el default
@@ -89,12 +81,8 @@ class Account(BaseModel):
         blank=True,
         default=0,
     )
-    user = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE, verbose_name='Usuario', null=True
-    )
-    is_shared = models.BooleanField(
-        verbose_name='Cuenta compartida', default=False
-    )
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='Usuario')
+    is_shared = models.BooleanField(verbose_name='Cuenta compartida', default=False)
     family_group = models.ForeignKey(
         FamilyGroup,
         on_delete=models.CASCADE,

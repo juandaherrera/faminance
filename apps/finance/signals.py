@@ -1,8 +1,24 @@
-from django.db.models.signals import post_migrate, pre_save
+from django.db.models import Q
+from django.db.models.signals import post_migrate, post_save, pre_save
 from django.dispatch import receiver
+from django.utils import timezone
 
-from .input_data import account_type_instaces, currency_instances
-from .models import AccountType, Currency, Transaction
+from apps.users.models import CustomUser
+
+from .input_data import (
+    account_type_instaces,
+    all_transaction_categories,
+    both_categories,
+    currency_instances,
+)
+from .models import (
+    Account,
+    AccountType,
+    Currency,
+    Transaction,
+    TransactionCategory,
+    UserTrasactionCategory,
+)
 
 
 @receiver(post_migrate)
@@ -16,17 +32,24 @@ def create_defeault_instances(sender, **kwargs):
     if sender.name == 'apps.finance':
         # --------------- Default Currencies ---------------
         for c in currency_instances:
-            obj, _ = Currency.objects.get_or_create(
-                code=c, name=currency_instances[c]
-            )
+            obj, _ = Currency.objects.get_or_create(code=c, name=currency_instances[c])
 
         # --------------- Default Account Categories ---------------
         for ac in account_type_instaces:
-            AccountType.objects.get_or_create(
-                name=ac,
-                description=account_type_instaces[ac]['description'],
-                icon=account_type_instaces[ac]['icon'],
-            )
+            try:
+                AccountType.objects.get_or_create(
+                    name=ac,
+                    description=account_type_instaces[ac]['description'],
+                    icon=account_type_instaces[ac]['icon'],
+                )
+            except Exception as e:
+                print(e)
+
+        for category in all_transaction_categories:
+            try:
+                TransactionCategory.objects.get_or_create(**category)
+            except Exception as e:
+                print(e)
 
 
 @receiver(pre_save, sender=Transaction)
@@ -53,3 +76,40 @@ def update_account_balance(sender, instance: Transaction, **kwargs):
             instance.account.balance += instance.amount
 
     instance.account.save()
+
+
+# @receiver(pre_save, sender=Account)
+@receiver(post_save, sender=Account)
+def update_account_balance(sender, instance: Account, created, **kwargs):
+    if created and instance.balance != 0:
+        amount, instance.balance = instance.balance, 0
+        instance.save()
+        category, _ = TransactionCategory.objects.get_or_create(**both_categories[0])
+        adjustment_cat, _ = UserTrasactionCategory.objects.get_or_create(
+            user=instance.user, category=category
+        )
+
+        transaction = Transaction.objects.create(
+            category=adjustment_cat,
+            account=instance,
+            amount=amount,
+            date=timezone.now(),
+            description='Ajuste automático de cuenta',
+        )
+
+        transaction.save()
+
+
+@receiver(post_save, sender=CustomUser)
+def default_user_transaction_categories(sender, instance: CustomUser, created, **kwargs):
+    user_fg = instance.family_group.all()
+
+    transaction_ctgys = TransactionCategory.objects.filter(
+        Q(is_global=True) | Q(family_group__in=user_fg)
+    )
+
+    for ctgy in transaction_ctgys:
+        try:
+            UserTrasactionCategory.objects.get_or_create(user=instance, category=ctgy)
+        except Exception as e:
+            print(e)

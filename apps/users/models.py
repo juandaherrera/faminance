@@ -10,8 +10,9 @@ from apps.utils.models import BaseModel
 
 class FamilyGroup(BaseModel):
     name = models.CharField(max_length=60, verbose_name='Nombre')
-    description = models.TextField(
-        null=True, blank=True, verbose_name='Descripción'
+    description = models.TextField(null=True, blank=True, verbose_name='Descripción')
+    administrator = models.ForeignKey(
+        'CustomUser', on_delete=models.CASCADE, verbose_name='Administrador'
     )
 
     def __str__(self) -> str:
@@ -30,9 +31,7 @@ class CustomUser(AbstractUser):
         blank=True,
         verbose_name="Foto de Perfil",
     )
-    family_group = models.ManyToManyField(
-        FamilyGroup, verbose_name="Grupo Familiar", blank=True
-    )
+    family_group = models.ManyToManyField(FamilyGroup, verbose_name="Grupo Familiar", blank=True)
 
     def delete_old_image(self) -> None:
         if self.pk:
