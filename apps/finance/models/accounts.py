@@ -96,6 +96,10 @@ class Account(BaseModel):
     def balance_formatted(self):
         return utils.float_formatter(self.balance)
 
+    @property
+    def last_transaction(self):
+        return self.transaction_set.order_by('-date').first()
+
     class Meta:
         verbose_name = 'Cuenta'
         verbose_name_plural = "Cuentas"

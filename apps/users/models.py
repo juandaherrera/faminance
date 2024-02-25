@@ -34,7 +34,7 @@ class CustomUser(AbstractUser):
     family_group = models.ManyToManyField(FamilyGroup, verbose_name="Grupo Familiar", blank=True)
 
     def delete_old_image(self) -> None:
-        if self.pk:
+        if self.pk and self.profile_pic:
             try:
                 old_pic = CustomUser.objects.get(pk=self.pk).profile_pic
                 new_pic = self.profile_pic

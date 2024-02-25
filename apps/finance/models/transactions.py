@@ -1,5 +1,7 @@
 from django.db import models
+from django.utils import timezone
 
+import apps.utils.functions as utils
 from apps.users.models import CustomUser, FamilyGroup
 from apps.utils.models import BaseModel
 
@@ -87,8 +89,12 @@ class Transaction(BaseModel):
         blank=True,
         default=0,
     )
-    date = models.DateTimeField(verbose_name='Fecha de Transacción')
+    date = models.DateTimeField(verbose_name='Fecha de Transacción', default=timezone.now)
     description = models.TextField(verbose_name='Descripción', null=True, blank=True)
+
+    @property
+    def amount_formatted(self):
+        return utils.float_formatter(self.amount)
 
     class Meta:
         verbose_name = 'Transacción'
@@ -96,4 +102,4 @@ class Transaction(BaseModel):
         ordering = ['category', '-date', 'account']
 
     def __str__(self) -> str:
-        return f'({self.category}) | {self.date} | {self.amount}'
+        return f'({self.category}) | {self.date} | {self.amount_formatted}'
