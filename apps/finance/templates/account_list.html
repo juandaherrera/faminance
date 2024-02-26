@@ -4,11 +4,11 @@
 {% block card_header %}
     <div class="row d-flex justify-content-end align-items-center">
         <div class="col d-flex justify-content-start align-items-center">
-            <h4 class="card-title">Listado de {{ info.header.title }}</h4> 
+            <h4 class="card-title">Listado de {{ info.model.verbose_name_plural }}</h4> 
         </div>
         <div class="col-3 d-flex justify-content-end">
             <button type="button" class="btn btn-primary" onclick="return open_modal('{% url 'finance:account-create-modal' %}')">
-                <i class="bi bi-plus"></i> {{ info.others.create_button }}
+                <i class="bi bi-plus"></i> Crear {{ info.model.verbose_name }}
             </button>
         </div>
     </div>

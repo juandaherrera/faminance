@@ -1,5 +1,13 @@
 {% extends "defaults/list.html" %}
 
+{% block card_header %}
+    <div class="row d-flex justify-content-end align-items-center">
+        <div class="col d-flex justify-content-start align-items-center">
+            <h4 class="card-title">Listado de {{ info.model.verbose_name_plural }}</h4> 
+        </div>
+    </div>
+{% endblock card_header %}
+
 {% block table_header %}
     <th>Nombre</th>
     <th>Descripción</th>
