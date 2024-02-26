@@ -1,5 +1,5 @@
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, UpdateView
 
 from apps.utils.functions import breadcrumbs_format
 
@@ -58,6 +58,22 @@ class AccountCreateView(CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+
+    def get_template_names(self):
+        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return ['account_form.html']
+        else:
+            return ['']
+
+
+class AccountUpdateView(UpdateView):
+    model = Account
+    form_class = AccountForm
+    success_url = reverse_lazy('finance:account-list')
+
+    # def form_valid(self, form):
+    #     form.instance.user = self.request.user
+    #     return super().form_valid(form)
 
     def get_template_names(self):
         if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
