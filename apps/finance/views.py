@@ -36,10 +36,12 @@ class AccountListView(ListView):
     )
     info = {
         'header': {'title': 'Cuentas'},
-        'model': {'name': Account._meta.verbose_name},
+        'model': {
+            'name': Account._meta.verbose_name,
+            'name_plural': Account._meta.verbose_name_plural,
+        },
         'others': {
             'create_button': 'Agregar Cuenta',
-            'create_url': reverse_lazy('finance:account-create'),
         },
     }
 
@@ -54,29 +56,15 @@ class AccountCreateView(CreateView):
     model = Account
     form_class = AccountForm
     success_url = reverse_lazy('finance:account-list')
+    template_name = "account_form.html"
 
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
-
-    def get_template_names(self):
-        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return ['account_form.html']
-        else:
-            return ['']
 
 
 class AccountUpdateView(UpdateView):
     model = Account
     form_class = AccountForm
     success_url = reverse_lazy('finance:account-list')
-
-    # def form_valid(self, form):
-    #     form.instance.user = self.request.user
-    #     return super().form_valid(form)
-
-    def get_template_names(self):
-        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return ['account_form.html']
-        else:
-            return ['']
+    template_name = "account_form.html"

@@ -10,3 +10,21 @@ $(document).ready(function () {
         }
     });
 });
+
+function open_modal(url) {
+    $("#default_modal").load(url, function () {
+        // $(this).modal({
+        //     backdrop: "static",
+        //     keyboard: false,
+        // });
+
+        $(this).modal("show");
+    });
+
+    return false;
+}
+
+function close_modal() {
+    $("#default_modal").modal("hide");
+    return false;
+}

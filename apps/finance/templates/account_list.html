@@ -1,6 +1,19 @@
 {% extends "defaults/list.html" %}
 {% load humanize %}
 
+{% block card_header %}
+    <div class="row d-flex justify-content-end align-items-center">
+        <div class="col d-flex justify-content-start align-items-center">
+            <h4 class="card-title">Listado de {{ info.header.title }}</h4> 
+        </div>
+        <div class="col-3 d-flex justify-content-end">
+            <button type="button" class="btn btn-primary" onclick="return open_modal('{% url 'finance:account-create-modal' %}')">
+                <i class="bi bi-plus"></i> {{ info.others.create_button }}
+            </button>
+        </div>
+    </div>
+{% endblock card_header %}
+
 {% block table_header %}
     <th>Nombre</th>
     <th>Tipo de Cuenta</th>
@@ -23,7 +36,15 @@
                 {% endif %}
             </td>
             <td>
-                {% include "defaults/action_buttons.html" %}
+                <a href="#!" class="btn btn-light btn-icon btn-sm rounded-circle me-1" data-bs-toggle="tooltip" data-placement="top" title="Ver">
+                    <i class="bi bi-eye" style="font-size: 1.25em;"></i>
+                </a>
+                <a class="btn btn-light btn-icon btn-sm rounded-circle me-1" title="Editar" onclick="return open_modal('{% url 'finance:account-update-modal' pk=object.pk %}')">
+                    <i class="bi bi-pencil-square" style="font-size: 1.25em;"></i>
+                </a>
+                <a href="#!" class="btn btn-light btn-icon btn-sm rounded-circle" data-bs-toggle="tooltip" data-placement="top" title="Eliminar">
+                    <i class="bi bi-trash" style="font-size: 1.25em;"></i>
+                </a>
             </td>
         </tr>
         
