@@ -19,7 +19,7 @@ class AccountForm(forms.ModelForm):
             'type': forms.Select(attrs={'class': 'form-select'}),
             'currency': forms.Select(attrs={'class': 'form-select'}),
             'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'balance': forms.NumberInput(attrs={'class': 'form-control', 'step': '500'}),
+            'balance': forms.NumberInput(attrs={'class': 'form-control'}),
             'is_shared': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'family_group': forms.Select(attrs={'class': 'form-select'}),
         }

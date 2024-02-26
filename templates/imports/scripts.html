@@ -1,10 +1,15 @@
 {% load static %}
 <!-- Libs JS -->
-<script src="{% static 'libs/jquery/dist/jquery.min.js' %}"></script>
-<script src="{% static 'libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs5/dt-1.10.25/datatables.min.js"></script>
+<script src="{% static 'libs/jquery/dist/jquery.min.js' %}"></script> <!-- JQuery -->
+<script src="{% static 'libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script> <!-- Boostrap -->
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs5/dt-1.10.25/datatables.min.js"></script> <!-- Datatables -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Sweet Alert -->
 
 
-<script src="{% static 'js/theme.min.js' %}"></script>
+<script src="{% static 'js/theme.min.js' %}"></script> <!-- Template Boostrap -->
 
 <script src="{% static 'js/custom.js' %}"></script>
+
+<script>
+    var csrfToken = "{{ csrf_token }}";
+</script>

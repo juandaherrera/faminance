@@ -1,5 +1,6 @@
 from typing import List, Tuple, Union
 
+from django.http import JsonResponse
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from apps.utils.functions import breadcrumbs_format
@@ -37,4 +38,10 @@ class BaseUpdateView(ContextMixin, UpdateView):
 
 
 class BaseDeleteView(ContextMixin, DeleteView):
-    pass
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'status': 'OK'})
+        else:
+            return response

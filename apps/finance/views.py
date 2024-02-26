@@ -1,6 +1,11 @@
 from django.urls import reverse_lazy
 
-from apps.utils.views import BaseCreateView, BaseListView, BaseUpdateView
+from apps.utils.views import (
+    BaseCreateView,
+    BaseDeleteView,
+    BaseListView,
+    BaseUpdateView,
+)
 
 from .forms import AccountForm
 from .models import Account, AccountType
@@ -40,3 +45,8 @@ class AccountUpdateView(BaseUpdateView):
     form_class = AccountForm
     success_url = reverse_lazy('finance:account-list')
     template_name = "account_form.html"
+
+
+class AccountDeleteView(BaseDeleteView):
+    model = Account
+    success_url = reverse_lazy('finance:account-list')

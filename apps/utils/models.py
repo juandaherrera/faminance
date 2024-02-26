@@ -1,6 +1,8 @@
 from django.db import models
 from django_userforeignkey.models.fields import UserForeignKey
 
+from .managers import NotDeletedManager
+
 
 class BaseModel(models.Model):
     """
@@ -30,6 +32,9 @@ class BaseModel(models.Model):
         related_name="+",
         editable=False,
     )
+
+    objects = NotDeletedManager()
+    all_objects = models.Manager()
 
     class Meta:
         abstract = True
