@@ -7,7 +7,7 @@ from apps.utils.views import (
     BaseUpdateView,
 )
 
-from ..forms import AccountForm
+from ..forms import AccountForm, TransactionForm
 from ..models import Transaction
 
 
@@ -23,26 +23,21 @@ class TransactionListView(BaseListView):
         return Transaction.objects.filter(account___deleted=False).order_by('-date')
 
 
-"""
-class AccountCreateView(BaseCreateView):
-    model = Account
-    form_class = AccountForm
-    success_url = reverse_lazy('finance:account-list')
-    template_name = 'accounts/account_form.html'
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
+class TransactionCreateView(BaseCreateView):
+    model = Transaction
+    form_class = TransactionForm
+    success_url = reverse_lazy('finance:transaction-list')
+    template_name = 'transactions/transaction_form.html'
 
 
-class AccountUpdateView(BaseUpdateView):
-    model = Account
-    form_class = AccountForm
-    success_url = reverse_lazy('finance:account-list')
-    template_name = "accounts/account_form.html"
+class TransactionUpdateView(BaseUpdateView):
+    model = Transaction
+    form_class = TransactionForm
+    success_url = reverse_lazy('finance:transaction-list')
+    template_name = 'transactions/transaction_form.html'
 
 
-class AccountDeleteView(BaseDeleteView):
-    model = Account
-    success_url = reverse_lazy('finance:account-list')
-"""
+# TO_DO Lógica para que al borrar una transacción se elimine el monto del balance de la cuenta
+class TransactionDeleteView(BaseDeleteView):
+    model = Transaction
+    success_url = reverse_lazy('finance:transaction-list')

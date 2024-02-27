@@ -27,10 +27,7 @@ class TransactionCategory(BaseModel):
     path = models.TextField(verbose_name='Path', null=True, blank=True, editable=False)
     is_global = models.BooleanField(verbose_name='Cuenta compartida', default=False)
     family_group = models.ForeignKey(
-        FamilyGroup,
-        on_delete=models.CASCADE,
-        verbose_name='Grupo Familiar',
-        null=True,
+        FamilyGroup, on_delete=models.CASCADE, verbose_name='Grupo Familiar', null=True, blank=True
     )
 
     class Meta:

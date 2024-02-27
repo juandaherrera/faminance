@@ -8,7 +8,7 @@
         </div>
         <div class="col-3 d-flex justify-content-end">
             <button type="button" class="btn btn-primary" onclick="return open_modal('{% url 'finance:account-create-modal' %}')">
-                <i class="bi bi-plus"></i> Crear {{ info.model.verbose_name }}
+                <i class="bi bi-plus"></i>Nueva {{ info.model.verbose_name }}
             </button>
         </div>
     </div>
@@ -17,7 +17,7 @@
 {% block table_header %}
     <th>Nombre</th>
     <th>Tipo de Cuenta</th>
-    <th>Saldo</th>
+    <th class="text-end">Saldo</th>
     <th>Usuario</th>
     <th>Última Transacción</th>
     <th>Acciones</th>
@@ -28,7 +28,7 @@
         <tr>
             <td> {{ object.name }} </td>
             <td><i class="{{ object.type.icon }}"></i> {{ object.type }}</td>
-            <td>{{ object.balance_formatted|intcomma }}</td>
+            <td class="text-end">{{ object.balance_formatted|intcomma }}</td>
             <td>{{ object.user.first_name }}</td>
             <td>
                 {% if object.last_transaction %}

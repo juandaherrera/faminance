@@ -6,9 +6,9 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
     </div>
     {% if object %}
-    <form method="post" action="{% url 'finance:account-update-modal' pk=object.pk %}">
+    <form method="post" action="{% url 'finance:transaction-update-modal' pk=object.pk %}">
     {% else %}
-    <form method="post" action="{% url 'finance:account-create-modal' %}">
+    <form method="post" action="{% url 'finance:transaction-create-modal' %}">
     {% endif %}
         <div class="modal-body">
             <div class="container-fluid">
