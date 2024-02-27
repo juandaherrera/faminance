@@ -1,6 +1,7 @@
+from django.apps import apps
 from django.contrib import admin
 
-from .models import MODELS_LIST
+app_models = apps.get_app_config('finance').get_models()
 
-for model in MODELS_LIST:
+for model in app_models:
     admin.site.register(model)

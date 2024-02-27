@@ -23,6 +23,14 @@ from .models import (
 )
 
 
+def get_adjustment_category(user: CustomUser) -> UserTrasactionCategory:
+    category, _ = TransactionCategory.objects.get_or_create(**both_categories[0])
+    adjustment_category, _ = UserTrasactionCategory.objects.get_or_create(
+        user=user, category=category
+    )
+    return adjustment_category
+
+
 @receiver(post_migrate)
 def create_defeault_instances(sender, **kwargs):
     """
@@ -66,23 +74,47 @@ def update_account_balance(sender, instance: Transaction, **kwargs):
                 instance.account.balance -= float(old_amount)
                 instance.account.balance += instance.amount
 
+        instance.account._skip_signal = True
         instance.account.save()
+        instance.account._skip_signal = False
 
 
-# @receiver(pre_save, sender=Account)
+@receiver(pre_save, sender=Account)
+def update_account_balance(sender, instance: Account, **kwargs):
+    """
+    Create a transaction if the balance of an account has just been modified directly from the accoun
+    """
+    if instance.pk and not instance._skip_signal:
+        with django_transaction.atomic():
+            old_balance = float(Account.objects.get(pk=instance.pk).balance)
+            new_balance = float(instance.balance)
+            instance.balance = old_balance
+
+            adjustment_category = get_adjustment_category(instance.user)
+            transaction = Transaction.objects.create(
+                category=adjustment_category,
+                account=instance,
+                amount=(new_balance - old_balance),
+                date=timezone.now(),
+                description='Ajuste automático de cuenta',
+            )
+
+            transaction.save()
+
+
 @receiver(post_save, sender=Account)
-def update_account_balance(sender, instance: Account, created, **kwargs):
+def update_new_account_balance(sender, instance: Account, created, **kwargs):
+    """
+    Create a transaction if the initial balance of an account that has just been created is different from 0.
+    """
     if created and instance.balance != 0:
         with django_transaction.atomic():
             amount, instance.balance = instance.balance, 0
             instance.save()
-            category, _ = TransactionCategory.objects.get_or_create(**both_categories[0])
-            adjustment_cat, _ = UserTrasactionCategory.objects.get_or_create(
-                user=instance.user, category=category
-            )
 
+            adjustment_category = get_adjustment_category(instance.user)
             transaction = Transaction.objects.create(
-                category=adjustment_cat,
+                category=adjustment_category,
                 account=instance,
                 amount=amount,
                 date=timezone.now(),

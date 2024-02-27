@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.test import TestCase
 from django.utils import timezone
 
@@ -13,12 +14,15 @@ from .models import (
 )
 
 
-class TransactionModelTests(TestCase):
-
+class BaseTestSetUp(TestCase):
     def setUp(self):
         self.user = CustomUser.objects.create(username='Test User', password='TestPassUser123$')
         self.account_type = AccountType.objects.create(name='Test Account Type')
         self.currency = Currency.objects.create(name='Test Money', code='ZZZ')
+        self.category = TransactionCategory.objects.create(name="Test Category")
+        self.user_category = UserTrasactionCategory.objects.create(
+            user=self.user, category=self.category
+        )
         self.account = Account.objects.create(
             name="Test Account",
             balance=100.00,
@@ -26,6 +30,12 @@ class TransactionModelTests(TestCase):
             currency=self.currency,
             user=self.user,
         )
+
+
+class TransactionModelTests(BaseTestSetUp):
+
+    def setUp(self):
+        super().setUp()
         self.second_account = Account.objects.create(
             name="Test Account 2",
             balance=50.00,
@@ -33,24 +43,6 @@ class TransactionModelTests(TestCase):
             currency=self.currency,
             user=self.user,
         )
-        self.category = TransactionCategory.objects.create(name="Test Category")
-        self.user_category = UserTrasactionCategory.objects.create(
-            user=self.user, category=self.category
-        )
-
-    def test_account_with_initial_balance_creates_transaction(self):
-        account = Account.objects.create(
-            name="Test Account Initial Balance",
-            balance=1500,
-            type=self.account_type,
-            currency=self.currency,
-            user=self.user,
-        )
-        transaction = Transaction.objects.get(account=account)
-
-        self.assertEqual(account.balance, 1500)
-        self.assertEqual(account.balance, transaction.amount)
-        self.assertGreaterEqual(transaction.created_at, account.created_at)
 
     def test_add_new_transaction_updates_account_balance(self):
         amount = 50.00
@@ -117,4 +109,29 @@ class TransactionModelTests(TestCase):
     # TO_DO Qué pasa cuando se cambia la cuenta a otra que tiene Currency diferente?
 
 
-# class AccountModelTests(TestCase):
+class AccountModelTests(BaseTestSetUp):
+
+    def test_account_with_initial_balance_creates_transaction(self):
+        transaction = Transaction.objects.filter(Q(account=self.account)).order_by('-date').first()
+
+        self.assertEqual(self.account.balance, 100)
+        self.assertEqual(self.account.balance, transaction.amount)
+        self.assertGreaterEqual(transaction.created_at, self.account.created_at)
+
+    def test_old_account_has_an_update_balance_positive(self):
+        self.account.balance = 1000
+        self.account.save()
+
+        transaction = Transaction.objects.filter(Q(account=self.account)).order_by('-date').first()
+
+        self.assertEqual(transaction.amount, 900)
+        self.assertEqual(self.account.balance, 1000)
+
+    def test_old_account_has_an_update_balance_negative(self):
+        self.account.balance = -1000
+        self.account.save()
+
+        transaction = Transaction.objects.filter(Q(account=self.account)).order_by('-date').first()
+
+        self.assertEqual(transaction.amount, -1100)
+        self.assertEqual(self.account.balance, -1000)

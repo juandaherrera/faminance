@@ -92,6 +92,8 @@ class Account(BaseModel):
         blank=True,
     )
 
+    _skip_signal = False
+
     @property
     def balance_formatted(self):
         return utils.float_formatter(self.balance)
