@@ -19,7 +19,7 @@ class AccountForm(forms.ModelForm):
             'type': forms.Select(attrs={'class': 'form-select'}),
             'currency': forms.Select(attrs={'class': 'form-select'}),
             'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'balance': forms.NumberInput(attrs={'class': 'form-control'}),
+            'balance': forms.TextInput(attrs={'class': 'form-control number-format'}),
             'is_shared': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'family_group': forms.Select(attrs={'class': 'form-select'}),
         }
@@ -39,7 +39,7 @@ class TransactionForm(forms.ModelForm):
         widgets = {
             'category': forms.Select(attrs={'class': 'form-select'}),
             'account': forms.Select(attrs={'class': 'form-select'}),
-            'amount': forms.NumberInput(attrs={'class': 'form-control'}),
+            'amount': forms.TextInput(attrs={'class': 'form-control number-format'}),
             'date': forms.DateTimeInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
         }
