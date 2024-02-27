@@ -7,33 +7,28 @@ from apps.utils.views import (
     BaseUpdateView,
 )
 
-from .forms import AccountForm
-from .models import Account, AccountType
+from ..forms import AccountForm
+from ..models import Transaction
 
 
-class AccountTypeListView(BaseListView):
-    model = AccountType
-    template_name = 'account_type_list.html'
+class TransactionListView(BaseListView):
+    model = Transaction
+    template_name = 'transactions/transaction_list.html'
     breadcrumbs = (
         ('Home', 'core:index'),
-        ('Tipos de Cuenta', None),
+        ('Transacciones', None),
     )
 
-
-class AccountListView(BaseListView):
-    model = Account
-    template_name = 'account_list.html'
-    breadcrumbs = (
-        ('Home', 'core:index'),
-        ('Cuentas', None),
-    )
+    def get_queryset(self):
+        return Transaction.objects.filter(account___deleted=False).order_by('-date')
 
 
+"""
 class AccountCreateView(BaseCreateView):
     model = Account
     form_class = AccountForm
     success_url = reverse_lazy('finance:account-list')
-    template_name = "account_form.html"
+    template_name = 'accounts/account_form.html'
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -44,9 +39,10 @@ class AccountUpdateView(BaseUpdateView):
     model = Account
     form_class = AccountForm
     success_url = reverse_lazy('finance:account-list')
-    template_name = "account_form.html"
+    template_name = "accounts/account_form.html"
 
 
 class AccountDeleteView(BaseDeleteView):
     model = Account
     success_url = reverse_lazy('finance:account-list')
+"""

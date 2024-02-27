@@ -112,9 +112,12 @@ class TransactionModelTests(BaseTestSetUp):
 class AccountModelTests(BaseTestSetUp):
 
     def test_account_with_initial_balance_creates_transaction(self):
-        transaction = Transaction.objects.filter(Q(account=self.account)).order_by('-date').first()
+        transactions_obj = Transaction.objects.filter(Q(account=self.account)).order_by('-date')
+        transaction = transactions_obj.first()
+        transaction_qty = transactions_obj.count()
 
         self.assertEqual(self.account.balance, 100)
+        self.assertEqual(transaction_qty, 1)
         self.assertEqual(self.account.balance, transaction.amount)
         self.assertGreaterEqual(transaction.created_at, self.account.created_at)
 

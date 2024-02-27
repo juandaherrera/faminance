@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.db import transaction as django_transaction
 from django.db.models import Q
 from django.db.models.signals import post_migrate, post_save, pre_save
@@ -58,7 +60,7 @@ def update_account_balance(sender, instance: Transaction, **kwargs):
     """
     with django_transaction.atomic():
         if instance.pk is None:
-            instance.account.balance += instance.amount
+            instance.account.balance += Decimal(instance.amount)
         else:
             old_amount = Transaction.objects.get(pk=instance.pk).amount
             old_account = Transaction.objects.get(pk=instance.pk).account
@@ -68,11 +70,11 @@ def update_account_balance(sender, instance: Transaction, **kwargs):
                 return
             elif old_account != instance.account:
                 old_account.balance -= old_amount
-                instance.account.balance += instance.amount
+                instance.account.balance += Decimal(instance.amount)
                 old_account.save()
             elif instance.amount != old_amount:
-                instance.account.balance -= float(old_amount)
-                instance.account.balance += instance.amount
+                instance.account.balance -= old_amount
+                instance.account.balance += Decimal(instance.amount)
 
         instance.account._skip_signal = True
         instance.account.save()
@@ -86,8 +88,8 @@ def update_account_balance(sender, instance: Account, **kwargs):
     """
     if instance.pk and not instance._skip_signal:
         with django_transaction.atomic():
-            old_balance = float(Account.objects.get(pk=instance.pk).balance)
-            new_balance = float(instance.balance)
+            old_balance = Account.objects.get(pk=instance.pk).balance
+            new_balance = instance.balance
             instance.balance = old_balance
 
             adjustment_category = get_adjustment_category(instance.user)
@@ -110,7 +112,9 @@ def update_new_account_balance(sender, instance: Account, created, **kwargs):
     if created and instance.balance != 0:
         with django_transaction.atomic():
             amount, instance.balance = instance.balance, 0
+            instance._skip_signal = True
             instance.save()
+            instance._skip_signal = False
 
             adjustment_category = get_adjustment_category(instance.user)
             transaction = Transaction.objects.create(

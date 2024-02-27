@@ -39,17 +39,16 @@
 
 {% block scripts %}
 <script>
-    // Activar DataTables en todas las tablas con la clase .datatable
+    
     $(document).ready(function() {
-        $('.datatable').DataTable();
+        $('.datatable').DataTable({
+            responsive: true,
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json'
+            },
+            order: []
+        });
     });
 
-    $('.datatable').DataTable({
-        responsive: true,
-        language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json'
-        }
-    }); 
-    
 </script>
 {% endblock scripts %}
